@@ -5,12 +5,14 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder ".", "/vagrant"
   config.vm.synced_folder "../shared", "/shared"
 
-  # Stop some firewall and security configuration so that you don't have to worry it this and makes things easier. Ignore this.
+  # Stop some firewall and security configuration so that you don't have to worry about
+  # this and makes things easier. Ignore this.
   config.vm.provision "shell",
     inline: "sudo systemctl stop firewalld; sudo systemctl disable firewalld; sudo setenforce Permissive"
 
-
-  #Define backend VM
+  # Any configuration of the inner variable applies only to the machine being defined
+  # (any configuration on `backend` will only affect the `backend` machine.)
+  # Define backend VM
   config.vm.define "backend" do |backend|
     backend.vm.box = "generic/centos7"
     backend.vm.network "forwarded_port", guest: 4001, host: 4001
@@ -22,7 +24,7 @@ Vagrant.configure("2") do |config|
 
   end
 
-  #Define backend VM
+  # Define backend VM
   config.vm.define "frontend" do |frontend|
     frontend.vm.box = "generic/centos7"
 
