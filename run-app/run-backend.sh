@@ -5,12 +5,24 @@ echo "Hello from backend!"
 rm -rf /app
 mkdir -p /app
 cp /shared/server/vuego-demoapp /app
-cd /app
 
-# Export env var
-sudo echo "export PORT=$PORT" >> /etc/profile
-# Run server. Append & to start as backgrounded
-echo $PORT
-./vuego-demoapp &
+cd /etc/systemd/system
 
-# TODO: Create service using systemd and enable it.
+cat << EOF > go-server.service
+[Unit]
+Description=Go server for vuego-demoapp
+
+[Service]
+Environment="PORT=$PORT"
+ExecStart=/app/vuego-demoapp &
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Reload daemon
+systemctl daemon-reload
+systemctl --now disable go-server.service
+
+# Enable and start server
+systemctl --now enable go-server.service
