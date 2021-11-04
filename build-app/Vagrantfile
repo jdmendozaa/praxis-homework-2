@@ -20,6 +20,6 @@ Vagrant.configure("2") do |config|
     inline: "sudo systemctl stop firewalld; sudo systemctl disable firewalld"
 
   # This runs the script you need to modify. 
-  config.vm.provision :shell, path: "bootstrap.sh"
+  config.vm.provision :shell, path: "bootstrap.sh", env: {"VUE_APP_API_ENDPOINT" => "http://10.0.0.8:4001/api"}
 
 end
