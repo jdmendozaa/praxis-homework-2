@@ -3,22 +3,15 @@ echo "Building app..."
 
 ### Dependencies ###
 # Install Git and Golang
-sudo yum -y install git golang
-# Install nvm @see https://github.com/nvm-sh/nvm#installing-and-updating
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-source ~/.bash_profile
-# Install Node and npm with nvm
-nvm install 14
-nvm alias default 14
+sudo yum -y install git Golang
 
-# Since installing @vue/cli was giving an error with npm
-# I decided to use yarn for now
-# Pretty sure it has something to do with how npm is installed by nvm
-# since it installs it for the user.
-npm install -g yarn
+# Install Node.js and npm
+curl -sL https://rpm.nodesource.com/setup_14.x | sudo bash -
+sudo yum -y install nodejs
 
 # Install Vue CLI
-yarn global add @vue/cli
+npm install -g @vue/cli
+
 # Remove old builds, remake dir and clone repo
 rm -rf /app
 mkdir -p /app
@@ -37,16 +30,11 @@ go build -o /shared/server
 
 ### Build Vue SPA ###
 cd /app/spa
-# Generate yarn.lock from package-lock
-yarn import
-# Remove package-lock 
-rm -f package-lock.json
 # Install and build using yarn
-yarn install
-yarn upgrade
+sudo npm ci
 # Set environment variables into .env file
 echo "VUE_APP_API_ENDPOINT=$VUE_APP_API_ENDPOINT" > .env.production
-yarn build
+sudo npm run build
 # Create output folder
 rm -rf /shared/spa
 mkdir -p /shared/spa
